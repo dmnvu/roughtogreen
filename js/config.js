@@ -1,0 +1,6 @@
+// RTG v4 – KONFIGURASJON
+var CONFIG = {
+  SUPABASE_URL: 'https://spxqrhkunqgpynixfoxb.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNweHFyaGt1bnFncHluaXhmb3hiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTA5MTEsImV4cCI6MjA5MjM2NjkxMX0.zhLmZxWEc0B9b87vLJOSlf4lmv01tF9Zq96B7VlnaH0',
+  GOLF_API_KEY: '',
+};

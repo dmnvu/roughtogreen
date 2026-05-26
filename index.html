@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="no" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RTG">
+<meta name="theme-color" content="#0a1510">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Rough to Green</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.s-btn-gjest {
+  display:flex;align-items:center;justify-content:center;
+  width:100%;padding:12px 20px;
+  background:transparent;border:1px solid rgba(212,168,67,0.35);
+  border-radius:4px;font-family:'Outfit',sans-serif;font-size:14px;
+  font-weight:500;color:rgba(245,240,232,0.6);cursor:pointer;
+  margin-bottom:14px;letter-spacing:0.04em;
+}
+.s-btn-gjest:active{background:rgba(212,168,67,0.08);}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- SPLASH -->
+<div id="splash">
+  <svg class="splash-scene" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#050e08"/><stop offset="60%" stop-color="#0a1f10"/><stop offset="100%" stop-color="#122a18"/></linearGradient>
+      <linearGradient id="fairway" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a5c3a"/><stop offset="100%" stop-color="#0f3d25"/></linearGradient>
+      <radialGradient id="moon" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d4a843" stop-opacity="0.95"/><stop offset="100%" stop-color="#b8912a" stop-opacity="0.2"/></radialGradient>
+    </defs>
+    <rect width="390" height="844" fill="url(#sky)"/>
+    <circle cx="60" cy="80" r="1.5" fill="#d4a843" opacity="0.5"/>
+    <circle cx="120" cy="50" r="1" fill="#fff" opacity="0.35"/>
+    <circle cx="200" cy="30" r="1.5" fill="#fff" opacity="0.4"/>
+    <circle cx="280" cy="70" r="1" fill="#d4a843" opacity="0.45"/>
+    <circle cx="330" cy="40" r="1.5" fill="#fff" opacity="0.35"/>
+    <circle cx="350" cy="100" r="1" fill="#fff" opacity="0.25"/>
+    <circle cx="40" cy="140" r="1" fill="#fff" opacity="0.25"/>
+    <circle cx="310" cy="130" r="1.5" fill="#d4a843" opacity="0.35"/>
+    <circle cx="320" cy="120" r="22" fill="url(#moon)" opacity="0.9"/>
+    <circle cx="312" cy="113" r="8" fill="#050e08" opacity="0.35"/>
+    <path d="M0 500 Q80 440 160 470 Q240 500 320 450 Q360 430 390 445 L390 844 L0 844Z" fill="#0a1f10" opacity="0.8"/>
+    <path d="M0 580 Q60 540 130 555 Q200 570 260 540 Q310 520 390 535 L390 844 L0 844Z" fill="url(#fairway)"/>
+    <path d="M0 620 Q60 600 130 610 Q200 620 260 600 Q310 585 390 595" stroke="#1d6b42" stroke-width="18" fill="none" opacity="0.4"/>
+    <ellipse cx="195" cy="560" rx="120" ry="35" fill="#2a8a58" opacity="0.9"/>
+    <ellipse cx="195" cy="558" rx="118" ry="33" fill="#32a868" opacity="0.5"/>
+    <line x1="220" y1="490" x2="220" y2="560" stroke="#c0c8b8" stroke-width="2"/>
+    <path d="M220 490 L248 500 L220 512 Z" fill="#d4a843"/>
+    <ellipse cx="30" cy="530" rx="22" ry="35" fill="#0a1f10"/>
+    <ellipse cx="55" cy="515" rx="18" ry="28" fill="#0d2318"/>
+    <ellipse cx="360" cy="520" rx="22" ry="35" fill="#0a1f10"/>
+    <ellipse cx="340" cy="508" rx="18" ry="28" fill="#0d2318"/>
+    <rect x="0" y="700" width="390" height="144" fill="#080f09"/>
+  </svg>
+  <div class="splash-content">
+    <div>
+      <div class="s-badge">RTG</div>
+      <div class="s-title">Rough<br>to <em>Green.</em></div>
+      <div class="s-line"></div>
+      <div class="s-sub">Din digitale golfdagbok.<br>Fra rough to green.</div>
+    </div>
+    <div class="s-bottom" id="splash-bottom"></div>
+  </div>
+</div>
+
+<!-- OPPSETT -->
+<div id="screen-setup" class="fullscreen hidden">
+  <div class="setup-content">
+    <div class="setup-badge">RTG</div>
+    <h2 class="setup-title">Velkommen!</h2>
+    <p class="setup-sub">Sett opp profilen din</p>
+    <div class="setup-form">
+      <div class="field"><label>Invitasjonskode</label><input type="text" id="setup-kode" placeholder="Skriv inn koden" style="text-transform:uppercase"></div>
+      <div class="field"><label>Kallenavn</label><input type="text" id="setup-navn" placeholder="f.eks. Kristoffer Reitan" maxlength="30"></div>
+      <div class="field"><label>Handicap</label><input type="number" id="setup-hcp" step="0.1" min="0" max="54" placeholder="f.eks. 30.0" inputmode="decimal"></div>
+      <button class="btn-save" onclick="fullforOppsett()">Kom i gang &#9971;</button>
+    </div>
+  </div>
+</div>
+
+<!-- GJEST BANNER -->
+<div id="gjest-banner" style="display:none;background:#d4a843;color:#0f1c14;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;letter-spacing:0.05em;align-items:center;justify-content:space-between;gap:12px;">
+  <span>&#128065; GJESTEMODUS – ingenting lagres</span>
+  <button onclick="avsluттGjestemodus()" style="background:#0f1c14;color:#d4a843;border:none;border-radius:4px;padding:4px 12px;font-size:12px;font-family:Outfit,sans-serif;font-weight:600;cursor:pointer;">Logg inn</button>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar hidden" id="topbar">
+  <div class="topbar-inner">
+    <div class="logo"><span class="logo-rtg">RTG</span> Rough to Green</div>
+    <div class="topbar-right">
+      <div class="hcp-pill">HCP <span id="hcp-display">&#8211;</span></div>
+      <div class="avatar" id="nav-avatar" onclick="showTab('profil')"></div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main-content hidden" id="main-content">
+<div class="app-layout">
+
+  <!-- SIDEBAR (desktop) -->
+  <nav class="sidebar" id="sidebar">
+    <button class="sidebar-btn active" data-tab="dagbok" onclick="showTab('dagbok')"><span class="sidebar-icon">&#128203;</span>Dagbok</button>
+    <button class="sidebar-btn" data-tab="ny" onclick="showTab('ny')"><span class="sidebar-icon">&#65291;</span>Legg til</button>
+    <button class="sidebar-btn" data-tab="statistikk" onclick="showTab('statistikk')"><span class="sidebar-icon">&#128200;</span>Statistikk</button>
+    <button class="sidebar-btn" data-tab="profil" onclick="showTab('profil')"><span class="sidebar-icon">&#128100;</span>Profil</button>
+  </nav>
+
+  <!-- CONTENT -->
+  <div style="flex:1;min-width:0">
+
+    <!-- DAGBOK -->
+    <section id="screen-dagbok" class="screen active">
+      <div class="page-header"><h1 class="page-title">Dagbok</h1><p class="page-sub">Din golfreise</p></div>
+      <div class="dash-grid">
+        <div class="dash-card"><div class="dash-label">Runder</div><div class="dash-val" id="dash-runder">0</div></div>
+        <div class="dash-card"><div class="dash-label">Snitt</div><div class="dash-val" id="dash-snitt">&#8211;</div></div>
+        <div class="dash-card"><div class="dash-label">Treninger</div><div class="dash-val" id="dash-treninger">0</div></div>
+        <div class="dash-card"><div class="dash-label">Totalt</div><div class="dash-val" id="dash-totalt">0</div></div>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Alle</button>
+        <button class="filter-btn" data-filter="rounds" onclick="setFilter('rounds')">Runder</button>
+        <button class="filter-btn" data-filter="range" onclick="setFilter('range')">Range</button>
+        <button class="filter-btn" data-filter="simulator" onclick="setFilter('simulator')">Simulator</button>
+        <button class="filter-btn" data-filter="notes" onclick="setFilter('notes')">Notater</button>
+      </div>
+      <div class="log-list" id="dagbok-log"></div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- RUNDE DETALJ -->
+    <section id="screen-runde-detalj" class="screen">
+      <div class="page-header">
+        <button class="back-btn" onclick="showTab('dagbok')">&#8592; Tilbake</button>
+        <h1 class="page-title" id="detalj-tittel">Runde</h1>
+        <p class="page-sub" id="detalj-sub"></p>
+      </div>
+      <div id="detalj-content"></div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- NY &#216;KT -->
+    <section id="screen-ny" class="screen">
+      <div class="page-header"><h1 class="page-title">Legg til &#248;kt</h1><p class="page-sub">Hva vil du logge?</p></div>
+      <div class="type-grid">
+        <div class="type-card" onclick="showScreen('screen-runde')"><div class="type-icon">&#9971;</div><div class="type-name">Runde</div><div class="type-desc">Spill p&#229; banen</div></div>
+        <div class="type-card" onclick="showScreen('screen-simulator')"><div class="type-icon">&#128187;</div><div class="type-name">Simulator</div><div class="type-desc">Innend&#248;rs runde</div></div>
+        <div class="type-card" onclick="showScreen('screen-range')"><div class="type-icon">&#127919;</div><div class="type-name">Range</div><div class="type-desc">Trenings&#248;kt</div></div>
+        <div class="type-card type-card-wide" onclick="showScreen('screen-notat')"><div class="type-icon" style="font-size:20px;margin:0">&#128221;</div><div><div class="type-name">Notat</div><div class="type-desc">Fri refleksjon</div></div></div>
+      </div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- RUNDE -->
+    <section id="screen-runde" class="screen">
+      <div class="page-header"><button class="back-btn" onclick="showScreen('screen-ny')">&#8592; Tilbake</button><h1 class="page-title">Ny runde</h1></div>
+      <div class="form-card">
+        <div class="form-section-label">Velg bane</div>
+        <div class="search-wrap">
+          <input type="text" id="bane-search" placeholder="S&#248;k etter bane..." oninput="searchCourse(this.value)" autocomplete="off">
+          <div id="search-results" class="search-dropdown hidden"></div>
+        </div>
+        <div id="selected-course" class="selected-course hidden">
+          <div class="selected-course-name" id="sc-name"></div>
+          <div class="selected-course-meta" id="sc-meta"></div>
+          <div id="tee-valg" class="hidden"></div>
+          <div id="toggle-2x9-wrap" style="display:none;margin-top:10px">
+            <label class="toggle-label"><input type="checkbox" id="toggle-2x9" onchange="toggle2x9()"> Spill 2x9 hull (18 hull totalt)</label>
+          </div>
+          <button class="change-btn" onclick="changeCourse()">Bytt bane</button>
+        </div>
+      </div>
+      <div id="scorecard-section" class="hidden">
+        <div class="form-card">
+          <div class="form-section-label">Detaljer</div>
+          <div class="field-row">
+            <div class="field"><label>Dato</label><input type="date" id="r-dato"></div>
+            <div class="field"><label>HCP ved start</label><input type="number" id="r-hcp-start" step="0.1" placeholder="30.0" inputmode="decimal"></div>
+          </div>
+        </div>
+        <div class="form-card">
+          <div class="form-section-label">Scorecard</div>
+          <div class="scorecard-table">
+            <div class="sc-header"><div>Hull</div><div>Par</div><div>Slag</div><div>+/&#8722;</div></div>
+            <div id="sc-rows"></div>
+            <div class="sc-total"><div>Totalt</div><div id="sc-par-total">&#8211;</div><div id="sc-slag-total">&#8211;</div><div id="sc-diff-total" class="sc-total-diff">&#8211;</div></div>
+          </div>
+        </div>
+        <div class="form-card">
+          <div class="form-section-label">Notater</div>
+          <div class="field"><label>Tanker og refleksjoner</label><textarea id="r-notat" rows="3" placeholder="Hva gikk bra?"></textarea></div>
+          <div class="field"><label>Send til Golfbox?</label>
+            <select id="r-golfbox"><option value="nei">Nei</option><option value="ja">Ja &#8211; marker for innsending</option></select>
+          </div>
+          <button class="btn-save" onclick="saveRunde()">Lagre runde</button>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- SIMULATOR -->
+    <section id="screen-simulator" class="screen">
+      <div class="page-header"><button class="back-btn" onclick="showScreen('screen-ny')">&#8592; Tilbake</button><h1 class="page-title">Simulatorrunde</h1></div>
+      <div class="form-card">
+        <div class="form-section-label">Detaljer</div>
+        <div class="field-row">
+          <div class="field"><label>Dato</label><input type="date" id="s-dato"></div>
+          <div class="field"><label>Bane</label><input type="text" id="s-bane" placeholder="f.eks. Augusta"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Par</label><input type="number" id="s-par" placeholder="72" inputmode="numeric"></div>
+          <div class="field"><label>Totale slag</label><input type="number" id="s-total" placeholder="88" inputmode="numeric"></div>
+        </div>
+        <div class="field"><label>Notater</label><textarea id="s-notat" rows="3" placeholder="Refleksjoner..."></textarea></div>
+        <button class="btn-save" onclick="saveSimulator()">Lagre simulatorrunde</button>
+      </div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- RANGE -->
+    <section id="screen-range" class="screen">
+      <div class="page-header"><button class="back-btn" onclick="showScreen('screen-ny')">&#8592; Tilbake</button><h1 class="page-title">Range-&#248;kt</h1></div>
+      <div class="form-card">
+        <div class="form-section-label">&#216;ktdetaljer</div>
+        <div class="field-row">
+          <div class="field"><label>Dato</label><input type="date" id="rg-dato"></div>
+          <div class="field"><label>Varighet (min)</label><input type="number" id="rg-tid" placeholder="60" inputmode="numeric" pattern="[0-9]*"></div>
+        </div>
+        <div class="field"><label>Antall baller</label><input type="number" id="rg-baller" placeholder="100" inputmode="numeric" pattern="[0-9]*"></div>
+        <div class="field"><label>Fokusomr&#229;de (velg flere)</label>
+          <div class="fokus-grid">
+            <button class="fokus-btn" data-val="Driver / teeshots" onclick="toggleFokus('Driver / teeshots')">Driver</button>
+            <button class="fokus-btn" data-val="Fairway woods / hybrider" onclick="toggleFokus('Fairway woods / hybrider')">FW / hybrid</button>
+            <button class="fokus-btn" data-val="Jern" onclick="toggleFokus('Jern')">Jern</button>
+            <button class="fokus-btn" data-val="Kort spill / chipping" onclick="toggleFokus('Kort spill / chipping')">Chipping</button>
+            <button class="fokus-btn" data-val="Putting" onclick="toggleFokus('Putting')">Putting</button>
+            <button class="fokus-btn" data-val="Bunker" onclick="toggleFokus('Bunker')">Bunker</button>
+            <button class="fokus-btn" data-val="Generelt" onclick="toggleFokus('Generelt')">Generelt</button>
+          </div>
+        </div>
+        <div class="field"><label>F&#248;lelse</label>
+          <div class="feeling-row">
+            <button class="feel-btn" data-val="1" onclick="setFeeling(1)">1<br><span>D&#229;rlig</span></button>
+            <button class="feel-btn" data-val="2" onclick="setFeeling(2)">2<br><span>Ok</span></button>
+            <button class="feel-btn selected" data-val="3" onclick="setFeeling(3)">3<br><span>Greit</span></button>
+            <button class="feel-btn" data-val="4" onclick="setFeeling(4)">4<br><span>Bra</span></button>
+            <button class="feel-btn" data-val="5" onclick="setFeeling(5)">5<br><span>Super!</span></button>
+          </div>
+        </div>
+        <div class="field"><label>Notater</label><textarea id="rg-notat" rows="3" placeholder="Hva jobbet du med?"></textarea></div>
+        <button class="btn-save" onclick="saveRange()">Lagre range-&#248;kt</button>
+      </div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- NOTAT -->
+    <section id="screen-notat" class="screen">
+      <div class="page-header"><button class="back-btn" onclick="showScreen('screen-ny')">&#8592; Tilbake</button><h1 class="page-title">Notat</h1></div>
+      <div class="form-card">
+        <div class="field-row">
+          <div class="field"><label>Dato</label><input type="date" id="n-dato"></div>
+          <div class="field"><label>Tittel</label><input type="text" id="n-tittel" placeholder="f.eks. Ny teknikk"></div>
+        </div>
+        <div class="field"><label>Notat</label><textarea id="n-tekst" rows="6" placeholder="M&#229;l, tips, refleksjoner..."></textarea></div>
+        <button class="btn-save" onclick="saveNotat()">Lagre notat</button>
+      </div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- STATISTIKK -->
+    <section id="screen-statistikk" class="screen">
+      <div class="page-header"><h1 class="page-title">Statistikk</h1><p class="page-sub">Din HCP-utvikling</p></div>
+      <div id="statistikk-content"></div>
+      <div style="height:90px"></div>
+    </section>
+
+    <!-- PROFIL -->
+    <section id="screen-profil" class="screen">
+      <div class="page-header"><h1 class="page-title">Profil</h1></div>
+      <div id="profil-content"></div>
+      <div style="height:90px"></div>
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /app-layout -->
+</main>
+
+<!-- BOTTOM NAV (mobil) -->
+<nav class="bottom-nav hidden" id="bottom-nav">
+  <button class="nav-btn active" data-tab="dagbok" onclick="showTab('dagbok')"><span class="nav-icon">&#128203;</span><span>Dagbok</span></button>
+  <button class="nav-btn nav-add" data-tab="ny" onclick="showTab('ny')"><span class="nav-icon">&#65291;</span><span>Legg til</span></button>
+  <button class="nav-btn" data-tab="statistikk" onclick="showTab('statistikk')"><span class="nav-icon">&#128200;</span><span>Stats</span></button>
+  <button class="nav-btn" data-tab="profil" onclick="showTab('profil')"><span class="nav-icon">&#128100;</span><span>Profil</span></button>
+</nav>
+
+</div><!-- /app -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/config.js"></script>
+<script src="js/courses.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function(){});
+}
+// erInnlogget lagres globalt så knappen vet hva den skal gjøre
+var _erInnlogget = false;
+
+function visSplash(erInnlogget) {
+  _erInnlogget = erInnlogget;
+  var bottom = document.getElementById('splash-bottom');
+  bottom.innerHTML =
+    '<button class="s-btn" onclick="gaTilRTG()">&#8594; G&#229; til RTG</button>' +
+    '<button class="s-btn-gjest" onclick="startGjestemodus()">&#128065; Pr&#248;v som gjest</button>' +
+    '<div class="s-meta">Rough to Green &nbsp;&#183;&nbsp; 2026</div>';
+}
+
+function gaTilRTG() {
+  if (_erInnlogget) {
+    visApp();
+  } else {
+    loggInnGoogle();
+  }
+}
+
+// ---- GJESTEMODUS ----
+var erGjestemodus = false;
+
+var GJEST_PROFIL = {
+  bruker_id: 'gjest',
+  navn: 'Gjest',
+  email: '',
+  hcp: 28.0,
+  hcp_mal: 18
+};
+
+var GJEST_OKTER = [
+  {
+    id: 'g1', type: 'runde', dato: '2026-05-20',
+    bane: 'Bleik Golfstrømsbane', bane_id: 'bleik', sted: 'Bleik, Andøy',
+    hull: 9, total_par: 35, total_slag: 44, diff: 9,
+    tee_id: 'gul', tee_navn: 'Gul tee', tee_farge: '#d4a843',
+    par_array: [3,3,4,5,4,4,4,5,3],
+    scores: [4,4,5,6,5,5,5,6,4],
+    notat: 'Bra dag på banen! Putting var solid.',
+    synlighet: 'privat', vaer_temp: 14, vaer_vind: 12, vaer_nedbor: 0,
+    hcp_ved_start: 28.0, bruker_navn: 'Gjest', opprettet: '2026-05-20T10:00:00Z'
+  },
+  {
+    id: 'g2', type: 'runde', dato: '2026-05-12',
+    bane: 'Bleik Golfstrømsbane', bane_id: 'bleik', sted: 'Bleik, Andøy',
+    hull: 9, total_par: 35, total_slag: 47, diff: 12,
+    tee_id: 'gul', tee_navn: 'Gul tee', tee_farge: '#d4a843',
+    par_array: [3,3,4,5,4,4,4,5,3],
+    scores: [4,5,6,7,5,5,6,6,3],
+    notat: 'Sleit litt med driver i dag.',
+    synlighet: 'privat', vaer_temp: 10, vaer_vind: 18, vaer_nedbor: 1.2,
+    hcp_ved_start: 28.4, bruker_navn: 'Gjest', opprettet: '2026-05-12T11:00:00Z'
+  },
+  {
+    id: 'g3', type: 'range', dato: '2026-05-18',
+    fokus: ['Jern', 'Chipping'], tid: 60, baller: 80,
+    feeling: 4, notat: 'God økt! Jernet sitter bedre.',
+    synlighet: 'privat', bruker_navn: 'Gjest', opprettet: '2026-05-18T09:00:00Z'
+  },
+  {
+    id: 'g4', type: 'simulator', dato: '2026-05-08',
+    bane: 'Augusta National', total_par: 72, total_slag: 89, diff: 17,
+    notat: 'Gøy å spille Augusta! Amen Corner var tøff.',
+    synlighet: 'privat', bruker_navn: 'Gjest', opprettet: '2026-05-08T14:00:00Z'
+  },
+  {
+    id: 'g5', type: 'notat', dato: '2026-05-15',
+    tittel: 'Mål for sesongen',
+    notat: 'Kom under HCP 20 innen sesongavslutning. Fokuser på putting og kort spill.',
+    synlighet: 'privat', bruker_navn: 'Gjest', opprettet: '2026-05-15T08:00:00Z'
+  }
+];
+
+var GJEST_HCP_HISTORIKK = [
+  { id: 'gh1', hcp: 30.2, dato: '2026-04-01' },
+  { id: 'gh2', hcp: 29.5, dato: '2026-04-15' },
+  { id: 'gh3', hcp: 28.8, dato: '2026-05-01' },
+  { id: 'gh4', hcp: 28.0, dato: '2026-05-20' }
+];
+
+function startGjestemodus() {
+  erGjestemodus = true;
+  currentUser = { id: 'gjest' };
+  currentProfil = GJEST_PROFIL;
+  mineOkter = GJEST_OKTER;
+  visAppGjest();
+}
+
+function visAppGjest() {
+  if (typeof aktiverGjestOverrides === 'function') aktiverGjestOverrides();
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('screen-setup').classList.add('hidden');
+  document.getElementById('topbar').classList.remove('hidden');
+  document.getElementById('main-content').classList.remove('hidden');
+  document.getElementById('bottom-nav').classList.remove('hidden');
+  document.getElementById('hcp-display').textContent = '28,0';
+  document.getElementById('nav-avatar').textContent = 'GJ';
+
+  // Vis gjestemodus-banner
+  var banner = document.getElementById('gjest-banner');
+  if (banner) banner.style.display = 'flex';
+
+  settDagensDato();
+  showTab('dagbok');
+}
+
+function avsluттGjestemodus() {
+  erGjestemodus = false;
+  currentUser = null;
+  currentProfil = null;
+  mineOkter = [];
+  var banner = document.getElementById('gjest-banner');
+  if (banner) banner.style.display = 'none';
+  visInnlogging();
+}
+// Sync sidebar with tab changes
+var origShowTab = showTab;
+showTab = function(tab) {
+  origShowTab(tab);
+  document.querySelectorAll('.sidebar-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+};
+</script>
+</body>
+</html>
