@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="no" data-theme="dark">
+<html lang="no" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -13,18 +13,71 @@
 <title>Rough to Green</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link rel="stylesheet" href="css/style.css">
 <style>
-.s-btn-gjest {
-  display:flex;align-items:center;justify-content:center;
-  width:100%;padding:12px 20px;
-  background:transparent;border:1px solid rgba(212,168,67,0.35);
-  border-radius:4px;font-family:'Outfit',sans-serif;font-size:14px;
-  font-weight:500;color:rgba(245,240,232,0.6);cursor:pointer;
-  margin-bottom:14px;letter-spacing:0.04em;
-}
+/* SPLASH */
+#splash{position:fixed;inset:0;background:#0a1510;z-index:999;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:opacity 0.5s ease,transform 0.5s ease;}
+#splash.hide{opacity:0;transform:translateY(-12px);pointer-events:none;}
+.splash-scene{position:absolute;inset:0;}
+.splash-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;height:100%;padding:52px 32px 44px;max-width:480px;margin:0 auto;}
+.s-badge{font-family:'Libre Baskerville',serif;font-size:11px;font-weight:700;letter-spacing:4px;color:#d4a843;text-transform:uppercase;margin-bottom:52px;opacity:0;animation:sUp 0.6s ease 0.15s forwards;}
+.s-title{font-family:'Libre Baskerville',serif;font-size:52px;font-weight:700;color:#f5f0e8;line-height:1.05;letter-spacing:-1px;opacity:0;animation:sUp 0.7s ease 0.35s forwards;}
+.s-title em{color:#d4a843;font-style:italic;}
+.s-line{width:28px;height:1px;background:#d4a843;margin:20px 0;opacity:0;animation:sUp 0.5s ease 0.55s forwards;}
+.s-sub{font-family:'Outfit',sans-serif;font-size:14px;font-weight:300;color:rgba(245,240,232,0.5);line-height:1.75;opacity:0;animation:sUp 0.5s ease 0.65s forwards;}
+.s-bottom{opacity:0;animation:sUp 0.5s ease 1.0s forwards;}
+.s-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 20px;background:#d4a843;border:none;border-radius:4px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:#0f1c14;letter-spacing:0.06em;cursor:pointer;margin-bottom:14px;}
+.s-btn:active{opacity:0.85;}
+.s-btn-gjest{display:flex;align-items:center;justify-content:center;width:100%;padding:12px 20px;background:transparent;border:1px solid rgba(212,168,67,0.35);border-radius:4px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;color:rgba(245,240,232,0.6);cursor:pointer;margin-bottom:14px;letter-spacing:0.04em;}
 .s-btn-gjest:active{background:rgba(212,168,67,0.08);}
+.s-meta{text-align:center;font-family:'Outfit',sans-serif;font-size:10px;color:rgba(245,240,232,0.18);letter-spacing:0.1em;text-transform:uppercase;}
+@keyframes sUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:480px){#splash{max-width:480px;left:50%;transform:translateX(-50%);right:auto;}#splash.hide{opacity:0;transform:translateX(-50%) translateY(-16px);}}
+
+/* SOSIALT */
+.hcp-liste{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+.hcp-rad{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);}
+.hcp-rad:last-child{border-bottom:none;}
+.hcp-rad-deg{background:var(--green-pale);}
+.hcp-rank{font-size:12px;color:var(--muted);width:18px;text-align:center;}
+.hcp-avatar{width:30px;height:30px;border-radius:50%;background:var(--green-mid);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.hcp-navn{flex:1;font-size:14px;font-weight:500;color:var(--ink);}
+.hcp-verdi{font-size:14px;font-weight:500;color:var(--green-mid);}
+.feed-author{display:flex;align-items:center;gap:8px;padding:8px 14px 4px;}
+.av-sm{width:26px;height:26px;border-radius:50%;background:var(--green-mid);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;}
+.av-you{background:#d4a843;color:#0f1c14;}
+.author-name{font-size:13px;font-weight:500;color:var(--ink);}
+.feed-body{padding:4px 14px 10px;}
+.feed-bane{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.detalj-link{font-size:11px;color:var(--muted);font-weight:400;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px;}
+.stat-box{background:var(--bg2);border-radius:6px;padding:6px 8px;text-align:center;}
+.stat-val{font-size:15px;font-weight:500;color:var(--ink);}
+.stat-na{font-size:13px;color:var(--muted);}
+.stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:1px;}
+.feed-actions{display:flex;gap:8px;padding:8px 14px;border-top:1px solid var(--border);}
+.act-btn{background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-family:'Outfit',sans-serif;}
+.act-btn:hover{background:var(--bg2);}
+.kommentarer-liste{padding:0 14px;}
+.kommentar{font-size:13px;color:var(--ink);padding:5px 0;border-bottom:1px solid var(--border);}
+.kommentar:last-child{border-bottom:none;}
+.kommentar-felt{margin:6px 14px 10px;display:flex;gap:6px;}
+.kommentar-felt input{flex:1;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:14px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);}
+.kommentar-felt button{background:var(--green);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;}
+.priv-rad{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:6px;}
+.vaer-info{font-size:11px;color:var(--muted);}
+
+/* STATS FIELDS */
+.stats-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stats-field-wide{grid-column:1/-1;}
+.stats-row{display:flex;gap:8px;align-items:center;}
+.stats-row input{flex:1;}
+.stats-row span{font-size:14px;color:var(--muted);}
+
+/* CONFIRM BTN */
+.confirm-btn{background:var(--green);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:14px;font-family:'Outfit',sans-serif;cursor:pointer;font-weight:600;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -36,7 +89,6 @@
     <defs>
       <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#050e08"/><stop offset="60%" stop-color="#0a1f10"/><stop offset="100%" stop-color="#122a18"/></linearGradient>
       <linearGradient id="fairway" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a5c3a"/><stop offset="100%" stop-color="#0f3d25"/></linearGradient>
-      <radialGradient id="moon" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d4a843" stop-opacity="0.95"/><stop offset="100%" stop-color="#b8912a" stop-opacity="0.2"/></radialGradient>
     </defs>
     <rect width="390" height="844" fill="url(#sky)"/>
     <circle cx="60" cy="80" r="1.5" fill="#d4a843" opacity="0.5"/>
@@ -44,22 +96,15 @@
     <circle cx="200" cy="30" r="1.5" fill="#fff" opacity="0.4"/>
     <circle cx="280" cy="70" r="1" fill="#d4a843" opacity="0.45"/>
     <circle cx="330" cy="40" r="1.5" fill="#fff" opacity="0.35"/>
-    <circle cx="350" cy="100" r="1" fill="#fff" opacity="0.25"/>
-    <circle cx="40" cy="140" r="1" fill="#fff" opacity="0.25"/>
-    <circle cx="310" cy="130" r="1.5" fill="#d4a843" opacity="0.35"/>
-    <circle cx="320" cy="120" r="22" fill="url(#moon)" opacity="0.9"/>
+    <circle cx="320" cy="120" r="22" fill="#d4a843" opacity="0.85"/>
     <circle cx="312" cy="113" r="8" fill="#050e08" opacity="0.35"/>
     <path d="M0 500 Q80 440 160 470 Q240 500 320 450 Q360 430 390 445 L390 844 L0 844Z" fill="#0a1f10" opacity="0.8"/>
     <path d="M0 580 Q60 540 130 555 Q200 570 260 540 Q310 520 390 535 L390 844 L0 844Z" fill="url(#fairway)"/>
-    <path d="M0 620 Q60 600 130 610 Q200 620 260 600 Q310 585 390 595" stroke="#1d6b42" stroke-width="18" fill="none" opacity="0.4"/>
     <ellipse cx="195" cy="560" rx="120" ry="35" fill="#2a8a58" opacity="0.9"/>
-    <ellipse cx="195" cy="558" rx="118" ry="33" fill="#32a868" opacity="0.5"/>
     <line x1="220" y1="490" x2="220" y2="560" stroke="#c0c8b8" stroke-width="2"/>
     <path d="M220 490 L248 500 L220 512 Z" fill="#d4a843"/>
     <ellipse cx="30" cy="530" rx="22" ry="35" fill="#0a1f10"/>
-    <ellipse cx="55" cy="515" rx="18" ry="28" fill="#0d2318"/>
     <ellipse cx="360" cy="520" rx="22" ry="35" fill="#0a1f10"/>
-    <ellipse cx="340" cy="508" rx="18" ry="28" fill="#0d2318"/>
     <rect x="0" y="700" width="390" height="144" fill="#080f09"/>
   </svg>
   <div class="splash-content">
@@ -73,6 +118,12 @@
   </div>
 </div>
 
+<!-- GJEST BANNER -->
+<div id="gjest-banner" style="display:none;background:#d4a843;color:#0f1c14;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;letter-spacing:0.05em;align-items:center;justify-content:space-between;gap:12px;">
+  <span>&#128065; GJESTEMODUS &#8211; ingenting lagres</span>
+  <button onclick="avsluттGjestemodus()" style="background:#0f1c14;color:#d4a843;border:none;border-radius:4px;padding:4px 12px;font-size:12px;font-family:Outfit,sans-serif;font-weight:600;cursor:pointer;">Logg inn</button>
+</div>
+
 <!-- OPPSETT -->
 <div id="screen-setup" class="fullscreen hidden">
   <div class="setup-content">
@@ -81,17 +132,11 @@
     <p class="setup-sub">Sett opp profilen din</p>
     <div class="setup-form">
       <div class="field"><label>Invitasjonskode</label><input type="text" id="setup-kode" placeholder="Skriv inn koden" style="text-transform:uppercase"></div>
-      <div class="field"><label>Kallenavn</label><input type="text" id="setup-navn" placeholder="f.eks. Kristoffer Reitan" maxlength="30"></div>
+      <div class="field"><label>Kallenavn</label><input type="text" id="setup-navn" placeholder="f.eks. Wiger Toods" maxlength="30"></div>
       <div class="field"><label>Handicap</label><input type="number" id="setup-hcp" step="0.1" min="0" max="54" placeholder="f.eks. 30.0" inputmode="decimal"></div>
       <button class="btn-save" onclick="fullforOppsett()">Kom i gang &#9971;</button>
     </div>
   </div>
-</div>
-
-<!-- GJEST BANNER -->
-<div id="gjest-banner" style="display:none;background:#d4a843;color:#0f1c14;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;letter-spacing:0.05em;align-items:center;justify-content:space-between;gap:12px;">
-  <span>&#128065; GJESTEMODUS – ingenting lagres</span>
-  <button onclick="avsluттGjestemodus()" style="background:#0f1c14;color:#d4a843;border:none;border-radius:4px;padding:4px 12px;font-size:12px;font-family:Outfit,sans-serif;font-weight:600;cursor:pointer;">Logg inn</button>
 </div>
 
 <!-- TOPBAR -->
@@ -109,16 +154,23 @@
 <main class="main-content hidden" id="main-content">
 <div class="app-layout">
 
-  <!-- SIDEBAR (desktop) -->
+  <!-- SIDEBAR desktop -->
   <nav class="sidebar" id="sidebar">
+    <button class="sidebar-btn" data-tab="sosialt" onclick="showTab('sosialt')"><span class="sidebar-icon">&#127968;</span>Sosialt</button>
     <button class="sidebar-btn active" data-tab="dagbok" onclick="showTab('dagbok')"><span class="sidebar-icon">&#128203;</span>Dagbok</button>
     <button class="sidebar-btn" data-tab="ny" onclick="showTab('ny')"><span class="sidebar-icon">&#65291;</span>Legg til</button>
     <button class="sidebar-btn" data-tab="statistikk" onclick="showTab('statistikk')"><span class="sidebar-icon">&#128200;</span>Statistikk</button>
     <button class="sidebar-btn" data-tab="profil" onclick="showTab('profil')"><span class="sidebar-icon">&#128100;</span>Profil</button>
   </nav>
 
-  <!-- CONTENT -->
   <div style="flex:1;min-width:0">
+
+    <!-- SOSIALT -->
+    <section id="screen-sosialt" class="screen">
+      <div class="page-header"><h1 class="page-title">Sosialt</h1><p class="page-sub">Se hva vennene dine spiller</p></div>
+      <div id="sosialt-content"></div>
+      <div style="height:90px"></div>
+    </section>
 
     <!-- DAGBOK -->
     <section id="screen-dagbok" class="screen active">
@@ -187,7 +239,6 @@
           <div class="form-section-label">Detaljer</div>
           <div class="field-row">
             <div class="field"><label>Dato</label><input type="date" id="r-dato"></div>
-            <div class="field"><label>HCP ved start</label><input type="number" id="r-hcp-start" step="0.1" placeholder="30.0" inputmode="decimal"></div>
           </div>
         </div>
         <div class="form-card">
@@ -199,10 +250,27 @@
           </div>
         </div>
         <div class="form-card">
-          <div class="form-section-label">Notater</div>
-          <div class="field"><label>Tanker og refleksjoner</label><textarea id="r-notat" rows="3" placeholder="Hva gikk bra?"></textarea></div>
-          <div class="field"><label>Send til Golfbox?</label>
-            <select id="r-golfbox"><option value="nei">Nei</option><option value="ja">Ja &#8211; marker for innsending</option></select>
+          <div class="form-section-label">Statistikk (valgfritt)</div>
+          <div class="field-row">
+            <div class="field"><label>GIR</label><input type="number" id="r-gir" placeholder="N/A" inputmode="numeric" min="0" max="18"></div>
+            <div class="field"><label>Putts totalt</label><input type="number" id="r-putts" placeholder="N/A" inputmode="numeric" min="0" max="72"></div>
+          </div>
+          <div class="field"><label>Fairways truffet / mulige</label>
+            <div class="stats-row">
+              <input type="number" id="r-fairways" placeholder="N/A" inputmode="numeric" min="0" max="18">
+              <span>/</span>
+              <input type="number" id="r-fairways-mulige" placeholder="N/A" inputmode="numeric" min="0" max="18">
+            </div>
+          </div>
+        </div>
+        <div class="form-card">
+          <div class="form-section-label">Notater og synlighet</div>
+          <div class="field"><label>Tanker og refleksjoner</label><textarea id="r-notat" rows="3" placeholder="Personlig notat &#8211; kun synlig for deg"></textarea></div>
+          <div class="field"><label>Synlighet for runden</label>
+            <div class="visibility-toggle">
+              <button class="vis-btn" id="vis-venner" onclick="setVisibility('venner')">&#128101; Synlig for venner</button>
+              <button class="vis-btn active" id="vis-privat" onclick="setVisibility('privat')">&#128274; Privat</button>
+            </div>
           </div>
           <button class="btn-save" onclick="saveRunde()">Lagre runde</button>
         </div>
@@ -222,6 +290,12 @@
         <div class="field-row">
           <div class="field"><label>Par</label><input type="number" id="s-par" placeholder="72" inputmode="numeric"></div>
           <div class="field"><label>Totale slag</label><input type="number" id="s-total" placeholder="88" inputmode="numeric"></div>
+        </div>
+        <div class="field"><label>Synlighet</label>
+          <div class="visibility-toggle">
+            <button class="vis-btn" id="vis-venner-s" onclick="setVisibility('venner')">&#128101; Synlig for venner</button>
+            <button class="vis-btn active" id="vis-privat-s" onclick="setVisibility('privat')">&#128274; Privat</button>
+          </div>
         </div>
         <div class="field"><label>Notater</label><textarea id="s-notat" rows="3" placeholder="Refleksjoner..."></textarea></div>
         <button class="btn-save" onclick="saveSimulator()">Lagre simulatorrunde</button>
@@ -293,19 +367,20 @@
       <div style="height:90px"></div>
     </section>
 
-  </div><!-- /content -->
-</div><!-- /app-layout -->
+  </div>
+</div>
 </main>
 
-<!-- BOTTOM NAV (mobil) -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav hidden" id="bottom-nav">
+  <button class="nav-btn" data-tab="sosialt" onclick="showTab('sosialt')"><span class="nav-icon">&#127968;</span><span>Sosialt</span></button>
   <button class="nav-btn active" data-tab="dagbok" onclick="showTab('dagbok')"><span class="nav-icon">&#128203;</span><span>Dagbok</span></button>
   <button class="nav-btn nav-add" data-tab="ny" onclick="showTab('ny')"><span class="nav-icon">&#65291;</span><span>Legg til</span></button>
   <button class="nav-btn" data-tab="statistikk" onclick="showTab('statistikk')"><span class="nav-icon">&#128200;</span><span>Stats</span></button>
   <button class="nav-btn" data-tab="profil" onclick="showTab('profil')"><span class="nav-icon">&#128100;</span><span>Profil</span></button>
 </nav>
 
-</div><!-- /app -->
+</div>
 <div id="toast" class="toast hidden"></div>
 
 <script src="js/config.js"></script>
@@ -313,12 +388,9 @@
 <script src="js/db.js"></script>
 <script src="js/app.js"></script>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(function(){});
-}
-// erInnlogget lagres globalt så knappen vet hva den skal gjøre
-var _erInnlogget = false;
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function(){}); }
 
+var _erInnlogget = false;
 function visSplash(erInnlogget) {
   _erInnlogget = erInnlogget;
   var bottom = document.getElementById('splash-bottom');
@@ -327,74 +399,50 @@ function visSplash(erInnlogget) {
     '<button class="s-btn-gjest" onclick="startGjestemodus()">&#128065; Pr&#248;v som gjest</button>' +
     '<div class="s-meta">Rough to Green &nbsp;&#183;&nbsp; 2026</div>';
 }
-
 function gaTilRTG() {
-  if (_erInnlogget) {
-    visApp();
-  } else {
-    loggInnGoogle();
-  }
+  if (_erInnlogget) visApp();
+  else loggInnGoogle();
 }
 
 // ---- GJESTEMODUS ----
-var erGjestemodus = false;
-
-var GJEST_PROFIL = {
-  bruker_id: 'gjest',
-  navn: 'Gjest',
-  email: '',
-  hcp: 28.0,
-  hcp_mal: 18
-};
-
+var GJEST_PROFIL = { bruker_id: 'gjest', navn: 'Hiktor Vovland', email: '', hcp: -5.0, hcp_mal: 0 };
 var GJEST_OKTER = [
-  {
-    id: 'g1', type: 'runde', dato: '2026-05-20',
-    bane: 'Bleik Golfstrømsbane', bane_id: 'bleik', sted: 'Bleik, Andøy',
-    hull: 9, total_par: 35, total_slag: 44, diff: 9,
-    tee_id: 'gul', tee_navn: 'Gul tee', tee_farge: '#d4a843',
-    par_array: [3,3,4,5,4,4,4,5,3],
-    scores: [4,4,5,6,5,5,5,6,4],
-    notat: 'Bra dag på banen! Putting var solid.',
-    synlighet: 'privat', vaer_temp: 14, vaer_vind: 12, vaer_nedbor: 0,
-    hcp_ved_start: 28.0, bruker_navn: 'Gjest', opprettet: '2026-05-20T10:00:00Z'
-  },
-  {
-    id: 'g2', type: 'runde', dato: '2026-05-12',
-    bane: 'Bleik Golfstrømsbane', bane_id: 'bleik', sted: 'Bleik, Andøy',
-    hull: 9, total_par: 35, total_slag: 47, diff: 12,
-    tee_id: 'gul', tee_navn: 'Gul tee', tee_farge: '#d4a843',
-    par_array: [3,3,4,5,4,4,4,5,3],
-    scores: [4,5,6,7,5,5,6,6,3],
-    notat: 'Sleit litt med driver i dag.',
-    synlighet: 'privat', vaer_temp: 10, vaer_vind: 18, vaer_nedbor: 1.2,
-    hcp_ved_start: 28.4, bruker_navn: 'Gjest', opprettet: '2026-05-12T11:00:00Z'
-  },
-  {
-    id: 'g3', type: 'range', dato: '2026-05-18',
-    fokus: ['Jern', 'Chipping'], tid: 60, baller: 80,
-    feeling: 4, notat: 'God økt! Jernet sitter bedre.',
-    synlighet: 'privat', bruker_navn: 'Gjest', opprettet: '2026-05-18T09:00:00Z'
-  },
-  {
-    id: 'g4', type: 'simulator', dato: '2026-05-08',
-    bane: 'Augusta National', total_par: 72, total_slag: 89, diff: 17,
-    notat: 'Gøy å spille Augusta! Amen Corner var tøff.',
-    synlighet: 'privat', bruker_navn: 'Gjest', opprettet: '2026-05-08T14:00:00Z'
-  },
-  {
-    id: 'g5', type: 'notat', dato: '2026-05-15',
-    tittel: 'Mål for sesongen',
-    notat: 'Kom under HCP 20 innen sesongavslutning. Fokuser på putting og kort spill.',
-    synlighet: 'privat', bruker_navn: 'Gjest', opprettet: '2026-05-15T08:00:00Z'
-  }
+  { id:'g1', type:'runde', dato:'2026-05-20', bane:'Lofoten Links', bane_id:'lofoten', hull:18,
+    total_par:72, total_slag:74, diff:2, tee_id:'gul', tee_navn:'Gul', tee_nr:65, tee_farge:'#d4a843',
+    par_array:[4,4,3,5,4,3,4,4,5,4,3,4,5,4,4,3,5,4], scores:[4,4,3,5,4,4,4,4,5,4,3,5,5,4,4,3,5,4],
+    gir:10, fairways:9, fairways_mulige:14, putts:30,
+    notat:'Fantastisk runde med utsikt over Lofoten! Putting var on fire i dag. Hole 6 var brutal i vinden.',
+    synlighet:'venner', vaer_temp:12, vaer_vind:18, vaer_nedbor:0,
+    hcp_ved_start:-5.0, bruker_navn:'Hiktor Vovland', opprettet:'2026-05-20T10:00:00Z' },
+  { id:'g2', type:'runde', dato:'2026-05-10', bane:'Miklagard Golf', bane_id:'miklagard', hull:18,
+    total_par:72, total_slag:69, diff:-3, tee_id:'blaa', tee_navn:'Bl\u00e5', tee_nr:73, tee_farge:'#1a3a8a',
+    par_array:[4,4,3,5,4,3,4,4,5,4,3,4,5,4,4,3,5,4], scores:[4,3,3,4,4,3,4,4,4,4,3,4,4,4,4,3,4,4],
+    gir:13, fairways:11, fairways_mulige:14, putts:27,
+    notat:'Personlig rekord! Birdie p\u00e5 hull 2, 4 og 12. Jernet fungerte perfekt. En av de beste rundene i karrieren.',
+    synlighet:'venner', vaer_temp:18, vaer_vind:8, vaer_nedbor:0,
+    hcp_ved_start:-4.8, bruker_navn:'Hiktor Vovland', opprettet:'2026-05-10T09:00:00Z' },
+  { id:'g3', type:'runde', dato:'2026-04-28', bane:'Augusta National', bane_id:'augusta', hull:18,
+    total_par:72, total_slag:71, diff:-1, tee_id:'gul', tee_navn:'Gul', tee_nr:68, tee_farge:'#d4a843',
+    par_array:[4,5,4,3,4,5,4,3,5,4,4,3,5,4,5,3,4,4], scores:[4,5,4,3,4,4,4,3,5,4,4,3,5,4,4,3,4,4],
+    gir:12, fairways:10, fairways_mulige:14, putts:29,
+    notat:'Amen Corner er like brutal som de sier. Klarte likevel \u00e5 holde det samlet. Fikk birdie p\u00e5 hole 15 etter et perfekt 8-jern inn p\u00e5 green.',
+    synlighet:'venner', vaer_temp:22, vaer_vind:5, vaer_nedbor:0,
+    hcp_ved_start:-4.5, bruker_navn:'Hiktor Vovland', opprettet:'2026-04-28T11:00:00Z' },
+  { id:'g4', type:'range', dato:'2026-05-15', fokus:['Driver / teeshots','Kort spill / chipping'],
+    tid:90, baller:150, feeling:5,
+    notat:'Ekstremt god \u00f8kt! Endelig f\u00f8lt at driversvingen sitter. Trente ogs\u00e5 mye p\u00e5 chipping fra vanskelige l\u00f8sninger rundt greenen.',
+    synlighet:'privat', bruker_navn:'Hiktor Vovland', opprettet:'2026-05-15T08:00:00Z' },
+  { id:'g5', type:'notat', dato:'2026-05-01',
+    tittel:'Sesongm\u00e5l 2026',
+    notat:'M\u00e5l: Scratch (0 HCP) innen sesongavslutning i oktober. Fokus p\u00e5 driving accuracy og putting under press. Skal spille minst 3 turneringer.',
+    synlighet:'privat', bruker_navn:'Hiktor Vovland', opprettet:'2026-05-01T08:00:00Z' }
 ];
-
 var GJEST_HCP_HISTORIKK = [
-  { id: 'gh1', hcp: 30.2, dato: '2026-04-01' },
-  { id: 'gh2', hcp: 29.5, dato: '2026-04-15' },
-  { id: 'gh3', hcp: 28.8, dato: '2026-05-01' },
-  { id: 'gh4', hcp: 28.0, dato: '2026-05-20' }
+  { id:'gh1', hcp:2.1, dato:'2024-06-01' },
+  { id:'gh2', hcp:0.8, dato:'2024-09-01' },
+  { id:'gh3', hcp:-1.2, dato:'2025-05-01' },
+  { id:'gh4', hcp:-3.5, dato:'2025-09-01' },
+  { id:'gh5', hcp:-5.0, dato:'2026-05-20' }
 ];
 
 function startGjestemodus() {
@@ -402,44 +450,28 @@ function startGjestemodus() {
   currentUser = { id: 'gjest' };
   currentProfil = GJEST_PROFIL;
   mineOkter = GJEST_OKTER;
-  visAppGjest();
-}
-
-function visAppGjest() {
-  if (typeof aktiverGjestOverrides === 'function') aktiverGjestOverrides();
+  aktiverGjestOverrides();
   document.getElementById('splash').style.display = 'none';
   document.getElementById('screen-setup').classList.add('hidden');
   document.getElementById('topbar').classList.remove('hidden');
   document.getElementById('main-content').classList.remove('hidden');
   document.getElementById('bottom-nav').classList.remove('hidden');
-  document.getElementById('hcp-display').textContent = '28,0';
-  document.getElementById('nav-avatar').textContent = 'GJ';
-
-  // Vis gjestemodus-banner
+  document.getElementById('hcp-display').textContent = '-5,0';
+  document.getElementById('nav-avatar').textContent = 'HV';
   var banner = document.getElementById('gjest-banner');
   if (banner) banner.style.display = 'flex';
-
   settDagensDato();
   showTab('dagbok');
 }
 
 function avsluттGjestemodus() {
   erGjestemodus = false;
-  currentUser = null;
-  currentProfil = null;
-  mineOkter = [];
+  deaktiverGjestOverrides();
+  currentUser = null; currentProfil = null; mineOkter = [];
   var banner = document.getElementById('gjest-banner');
   if (banner) banner.style.display = 'none';
   visInnlogging();
 }
-// Sync sidebar with tab changes
-var origShowTab = showTab;
-showTab = function(tab) {
-  origShowTab(tab);
-  document.querySelectorAll('.sidebar-btn').forEach(function(b) {
-    b.classList.toggle('active', b.dataset.tab === tab);
-  });
-};
 </script>
 </body>
 </html>

@@ -7,16 +7,13 @@ var INVITASJONSKODE = 'RTG2025';
 function initDB() {
   _sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, {
     auth: {
-      persistSession: true,
-      storageKey: 'rtg-auth',
-      storage: window.localStorage,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
+      persistSession: true, storageKey: 'rtg-auth',
+      storage: window.localStorage, autoRefreshToken: true, detectSessionInUrl: true
     }
   });
 
   // Ping for å vekke Supabase
-  _sb.from('profiler').select('bruker_id').limit(1).then(function() {});
+  _sb.from('profiler').select('bruker_id').limit(1).then(function(){});
 
   _sb.auth.onAuthStateChange(function(event, session) {
     if (event === 'SIGNED_IN' && session && session.user) {
@@ -56,7 +53,6 @@ function lastProfil() {
   _sb.from('profiler').select('*').eq('bruker_id', currentUser.id).single().then(function(result) {
     if (result.data) {
       currentProfil = result.data;
-      // Vis splash med "Gå til RTG"-knapp – ikke gå inn automatisk
       if (typeof visSplash === 'function') visSplash(true);
       else visApp();
     } else {
@@ -130,9 +126,81 @@ function hentMineOkter() {
     });
 }
 
+function hentFeed() {
+  return _sb.from('okter').select('*')
+    .eq('synlighet', 'venner')
+    .in('type', ['runde', 'simulator', 'range'])
+    .order('opprettet', { ascending: false })
+    .limit(50)
+    .then(function(result) { return result.error ? [] : (result.data || []); });
+}
+
+function hentAlleFeedMedMine() {
+  // Henter både egne og venners runder for sosial feed
+  return _sb.from('okter').select('*')
+    .in('type', ['runde', 'simulator'])
+    .order('opprettet', { ascending: false })
+    .limit(50)
+    .then(function(result) {
+      if (result.error) return [];
+      return (result.data || []).filter(function(o) {
+        return o.bruker_id === currentUser.id || o.synlighet === 'venner';
+      });
+    });
+}
+
 function hentAlleProfilHCP() {
   return _sb.from('profiler').select('navn, hcp, hcp_mal, bruker_id')
     .order('hcp', { ascending: true }).then(function(result) { return result.data || []; });
+}
+
+function toggleReaksjon(oktId) {
+  _sb.from('reaksjoner').select('id').eq('okt_id', oktId).eq('bruker_id', currentUser.id)
+    .single().then(function(result) {
+      if (result.data) {
+        _sb.from('reaksjoner').delete().eq('id', result.data.id).then(function() { oppdaterReaksjonUI(oktId); });
+      } else {
+        _sb.from('reaksjoner').insert({
+          id: Date.now().toString(), okt_id: oktId,
+          bruker_id: currentUser.id, bruker_navn: currentProfil.navn, type: 'tommel'
+        }).then(function() { oppdaterReaksjonUI(oktId); });
+      }
+    });
+}
+
+function hentReaksjoner(oktId) {
+  return _sb.from('reaksjoner').select('*').eq('okt_id', oktId)
+    .then(function(result) { return result.data || []; });
+}
+
+function oppdaterReaksjonUI(oktId) {
+  hentReaksjoner(oktId).then(function(reaksjoner) {
+    var el = document.getElementById('reaksjon-' + oktId);
+    if (el) {
+      var harReagert = reaksjoner.some(function(r) { return r.bruker_id === currentUser.id; });
+      el.innerHTML = (harReagert ? '<i class="ti ti-thumb-up" style="font-size:14px"></i>' : '<i class="ti ti-thumb-up" style="font-size:14px"></i>') + ' ' + reaksjoner.length;
+      el.style.color = harReagert ? '#2a8a58' : '';
+      el.style.fontWeight = harReagert ? '500' : '400';
+      el.dataset.liked = harReagert ? '1' : '0';
+    }
+  });
+}
+
+function lagreKommentar(oktId, tekst) {
+  var k = {
+    id: Date.now().toString(), okt_id: oktId,
+    bruker_id: currentUser.id, bruker_navn: currentProfil.navn,
+    tekst: tekst, opprettet: new Date().toISOString()
+  };
+  return _sb.from('kommentarer').insert(k).then(function(result) {
+    return result.error ? null : k;
+  });
+}
+
+function hentKommentarer(oktId) {
+  return _sb.from('kommentarer').select('*').eq('okt_id', oktId)
+    .order('opprettet', { ascending: true })
+    .then(function(result) { return result.data || []; });
 }
 
 function lagreHCPHistorikk(hcp) {
